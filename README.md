@@ -1,59 +1,111 @@
-# BLM191 Robotlar Ödev 1
+# Turtlebot3 Maze Solver and Mapper
+## 📌 Project Description
+This project aims to develop an autonomous system that combines the capabilities of the TurtleBot3 robot to solve mazes and map its environment using a LiDAR sensor (LaserScan), ROS (Robot Operating System) Noetic and OpenCV.
+The project consists of two main components:
+- Maze Solver → The robot tries to reach the maze exit by following the walls.
+- Mapper → The robot creates a map of its environment in real time.
+This system offers the ability to navigate by detecting obstacles and creating a digital map of the environment.
 
+## 🔧 Technologies and Libraries Used
+- LiDAR (LaserScan) Scanning the environment and calculating distances
+- Odometry To track the position of the robot
+- TF Transformations Coordinate transformations (base_scan → odom)
+- OpenCV Real-time visualization of the map
 
-## Kurulum Derleme
-- Öncelikle bir catkin çalışma alanı oluşturun ve `src` dizinine geçin
-- Repoyu klonlayın:
+## 🛠️ Working Logic of the Project
+The project has two main components:
+
+- Maze Solving Mechanism (Maze Solver)
+
+Detects surrounding walls with LiDAR scanning.
+Detects obstacles and changes direction.
+It recognizes 90° and 270° corners and provides orientation.
+Determines a safe path by moving parallel to the wall.
+Terminates the movement when the destination is reached.
+
+- Map Creation Mechanism (Mapper)
+  
+Maps the environment around the robot using LiDAR sensor.
+Continuously updates the robot's position with TF transformations.
+Plots the scanned points on the map in real time using OpenCV.
+The map is continuously updated to show the area explored by the robot.
+
+## 🚀Robot's Decision Mechanism
+
+1️⃣ Sensor Data Processing
+
+Distances are calculated with LiDAR scanning.
+Obstacles and open areas are detected.
+Incorrect or erroneous data is filtered out.
+
+2️⃣ Navigation
+
+The robot moves parallel to the wall.
+If it detects obstacles in front of it, it changes direction.
+If it detects a 90° or 270° corner, it makes the appropriate turn.
+It moves forward keeping the distance parallel to the wall.
+If the wall is too close, it turns slightly to the right.
+If the wall is too far away, it turns slightly to the left.
+If everything is in order, it goes straight ahead.
+
+3️⃣ Map Update
+
+LiDAR data is processed and the area explored by the robot is drawn on the map.
+The position of the robot is updated with odometry and TF transformations.
+Detected obstacles are marked on the map.
+
+4️⃣ Goal Reach Control
+
+By controlling the odometry data, the robot reaches the target point.
+When the target position is reached, the robot stops and the process ends.
+
+## Installation
 ```
-git clone https://gitlab.com/blm6191_2425b/members/23501021/blm6191-robotlar-odev-1.git
+$ mkdir -p ~/tb3_maze_solver_and_mapper/src
+$ cd ~/tb3_maze_solver_and_mapper/src
+$ git clone https://github.com/bugrahanturk/Turtlebot3-Maze-Solver-and-Mapper.git
+$ cd ..
+$ catkin_make
+$ source ~/.bashrc
+$ echo "export TURTLEBOT3_MODEL=waffle" >> ~/.bashrc
+$ source ~/.bashrc
+$ echo "export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:~/tb3_maze_solver/src/" >> ~/.bashrc
+$ source ~/.bashrc
 ```
-- Paketi derleme:
+### Start the Environment
 ```
-catkin build
+$ roslaunch micromouse_maze micromouse_maze4.launch
 ```
-- Yeni paketi ROS ortamınıza ekleyin:
+### Run Solver
 ```
-- source ~/<catkin_ws>/devel/setup.bash
+$ rosrun solve_maze my_solver
+```
+### Run Mapper
+```
+$ rosrun solve_maze my_mapper
 ```
 
-## Çalıştırma
-Labirent dünyası ve turtlebot3'ü oluşturan paketlerin kurulu olduğu varsayılmaktadır.
-
-- Labirent dünyası çalıştırılır(maze4):
-```
-roslaunch micromouse_maze micromouse_maze4.launch
-```
-- my_solver nod'unun çalıştırılması:
-```
-rosrun solve_maze my_solver
-```
-
-- my_mapper nod'unun çalıştırılması:
-```
-rosrun solve_maze my_mapper
-```
-
-## Sonuçlar
+## Results
 ### my_solver
-- Robot labirent duvarlarını soldan paralel olarak takip edecek şekilde ayarlanmıştır.
-- Robotun duvara olan mesafesi **d = 0.5**, Paralelband mesafesi **r = 0.1** olarak ayarlanmıştır.
+- The robot is set to follow the maze walls in parallel from the left.
+- The distance of the robot to the wall was set to **d = 0.5** and the Parallelband distance was set to **r = 0.1**.
 
 ![](img/DuvaraOlanMesafe.png)
 
-- Robotun Başlangıç Durum Görüntüsü:
+- Initial Status Image of the robot:
 
 ![](img/solver_start.png)
 
-- Robotun Merkeze Ulaşmış Görüntüsü:
+- Image of the robot reaching the center:
 
 ![](img/solver_finish.png)
 
 
 ### my_mapper
-- Harita görüntüsü:
+- Map view:
 
 ![](img/map.png)
 
-- Gazebo ortamından, rqt_gui kullanılarak yönlendirilen robotun haritalama görüntüsü:
+- Mapping image of the robot guided using rqt_gui from the Gazebo environment:
 
 ![](img/map_olusturma.png)
