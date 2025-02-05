@@ -69,7 +69,7 @@ $ catkin_make
 $ source ~/.bashrc
 $ echo "export TURTLEBOT3_MODEL=waffle" >> ~/.bashrc
 $ source ~/.bashrc
-$ echo "export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:~/tb3_maze_solver/src/" >> ~/.bashrc
+$ echo "export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:~/tb3_maze_solver_and_mapper/src/" >> ~/.bashrc
 $ source ~/.bashrc
 ```
 ### Start the Environment
